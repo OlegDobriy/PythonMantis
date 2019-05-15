@@ -35,10 +35,10 @@ class ProjectHelper:
         wd.find_element_by_link_text("Manage").click()
         wd.find_element_by_link_text("Manage Projects").click()
 
-    def delete(self, project):
+    def delete_project_by_name(self, project):
         wd = self.app.wd
         self.open_projects_page()
-        self.choose_project_by_name(project.name)
+        self.choose_project_by_name(project)
         wd.find_element_by_xpath('//input[@value="Delete Project"]').click()
         # apply
         wd.find_element_by_xpath('//input[@value="Delete Project"]').click()
@@ -46,15 +46,16 @@ class ProjectHelper:
 
     def choose_project_by_name(self, project):
         wd = self.app.wd
-        wd.find_element_by_link_text("%s") % project.name.click()
+        wd.find_element_by_link_text(project.name).click()
 
     def get_projects_list(self):
         wd = self.app.wd
         self.open_projects_page()
         projects_list = []
         for element in wd.find_elements_by_xpath('//table[@class="width100"]//*[contains(@class, "row-")]'):
+            id = element.find_element_by_xpath('.//td[1]/a').get_attribute('href').split('=', 1)[1]
             name = element.find_element_by_xpath('.//td[1]').text
             description = element.find_element_by_xpath('.//td[5]').text
-            projects_list.append(Project(name=name, description=description))
+            projects_list.append(Project(id=id, name=name, description=description))
         del projects_list[0]  # вырезать заголовок таблицы
         return list(projects_list)
