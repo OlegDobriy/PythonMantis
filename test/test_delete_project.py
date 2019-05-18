@@ -9,6 +9,6 @@ def test_delete_project(app):
         app.project.create(project)
     project = random.choice(old_list)
     app.project.delete_project_by_name(project)
-    new_list = app.project.get_projects_list()
+    new_list = app.soap.get_projects_list()
     old_list.remove(project)
     assert sorted(old_list, key=Project.sorting_name) == sorted(new_list, key=Project.sorting_name)
